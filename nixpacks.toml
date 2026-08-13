@@ -1,5 +1,4 @@
-[providers]
-python = "3.11"
+providers = ["python"]
 
 [phases.setup]
 nixPackages = ["python311", "python311Packages.pip"]
@@ -7,5 +6,5 @@ nixPackages = ["python311", "python311Packages.pip"]
 [phases.install]
 cmds = ["cd backend && pip install -r requirements.txt"]
 
-[phases.start]
-cmds = ["cd backend && python app.py"]
+[start]
+cmd = "cd backend && python app.py"
