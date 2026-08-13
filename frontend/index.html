@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackBit - Регистрация</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0a0b1e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 40px;
+            background: #13152b;
+            border-radius: 16px;
+            border: 1px solid #2a2d4a;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .logo span { color: #f7931a; }
+        .sub {
+            text-align: center;
+            color: #9ca3c9;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #9ca3c9;
+            margin-bottom: 4px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0a0b1e;
+            border: 1px solid #2a2d4a;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #f7931a;
+            box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.1);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #f7931a;
+            color: #0a0b1e;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-submit:hover {
+            background: #e07c0e;
+            transform: translateY(-2px);
+        }
+        .message {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        .message.success {
+            display: block;
+            background: rgba(34, 166, 94, 0.15);
+            border: 1px solid #22a65e;
+            color: #22a65e;
+        }
+        .message.error {
+            display: block;
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+        .switch-link {
+            text-align: center;
+            margin-top: 16px;
+            color: #9ca3c9;
+            font-size: 14px;
+        }
+        .switch-link span {
+            color: #f7931a;
+            cursor: pointer;
+        }
+        .switch-link span:hover {
+            text-decoration: underline;
+        }
+        .support-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #2a2d4a;
+        }
+        .support-link a {
+            color: #9ca3c9;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .support-link a:hover {
+            color: #f7931a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo">Black<span>Bit</span></div>
+    <p class="sub" id="formTitle">Создайте аккаунт</p>
+
+    <form id="authForm">
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="example@email.com" required>
+        </div>
+        <div class="form-group">
+            <label>Пароль</label>
+            <input type="password" id="password" placeholder="Введите пароль" required>
+        </div>
+        <div class="form-group" id="password2Group">
+            <label>Подтвердите пароль</label>
+            <input type="password" id="password2" placeholder="Повторите пароль">
+        </div>
+        <button type="submit" class="btn-submit" id="submitBtn">Зарегистрироваться</button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <div class="switch-link">
+        <span id="switchLink">Уже есть аккаунт? Войти</span>
+    </div>
+
+    <div class="support-link">
+        <a href="https://t.me/ваш_username_bot" target="_blank">🛠 Техническая поддержка</a>
+    </div>
+</div>
+
+<script>
+    // ===== КОНФИГ =====
+    // ПОСЛЕ ДЕПЛОЯ НА RAILWAY ЗАМЕНИТЕ НА ВАШ URL
+    const API_URL = 'http://localhost:5000';
+    
+    let isLogin = false;
+
+    // ===== ПЕРЕКЛЮЧЕНИЕ РЕГИСТРАЦИЯ/ВХОД =====
+    document.getElementById('switchLink').addEventListener('click', () => {
+        isLogin = !isLogin;
+        const title = document.getElementById('formTitle');
+        const btn = document.getElementById('submitBtn');
+        const pwd2Group = document.getElementById('password2Group');
+        const link = document.getElementById('switchLink');
+        
+        if (isLogin) {
+            title.textContent = 'Войдите в аккаунт';
+            btn.textContent = 'Войти';
+            pwd2Group.style.display = 'none';
+            link.textContent = 'Нет аккаунта? Зарегистрироваться';
+        } else {
+            title.textContent = 'Создайте аккаунт';
+            btn.textContent = 'Зарегистрироваться';
+            pwd2Group.style.display = 'block';
+            link.textContent = 'Уже есть аккаунт? Войти';
+        }
+        document.getElementById('message').style.display = 'none';
+    });
+
+    // ===== ОТПРАВКА ФОРМЫ =====
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const password2 = document.getElementById('password2').value;
+        const msgDiv = document.getElementById('message');
+        
+        if (!isLogin && password !== password2) {
+            msgDiv.className = 'message error';
+            msgDiv.textContent = '❌ Пароли не совпадают';
+            return;
+        }
+        
+        const endpoint = isLogin ? '/api/login' : '/api/register';
+        
+        try {
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                msgDiv.className = 'message success';
+                msgDiv.textContent = isLogin ? '✅ Вход выполнен!' : '✅ Регистрация успешна!';
+                document.getElementById('authForm').reset();
+            } else {
+                msgDiv.className = 'message error';
+                msgDiv.textContent = '❌ ' + (data.error || 'Ошибка');
+            }
+        } catch (error) {
+            msgDiv.className = 'message error';
+            msgDiv.textContent = '❌ Ошибка сервера. Проверьте API_URL';
+        }
+    });
+</script>
+
+</body>
+</html>
